@@ -89,3 +89,4 @@ QCAR/
 
 # macOS specific files
 .DS_Store
+Packages/com.ptc.vuforia.engine-*.tgz
