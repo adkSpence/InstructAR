@@ -1,10 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Vuforia;
 
 public class ShowChairOnScan : MonoBehaviour
 {
-  
-    public GameObject chairAnchor;
+    public GameObject chairAnchor; // This will be your Cube
     private ObserverBehaviour observerBehaviour;
     private bool hasBeenShown = false;
 
@@ -16,15 +15,21 @@ public class ShowChairOnScan : MonoBehaviour
             observerBehaviour.OnTargetStatusChanged += OnTargetStatusChanged;
         }
 
-        chairAnchor.SetActive(false);
+        if (chairAnchor != null)
+        {
+            chairAnchor.SetActive(false); // Hide cube at start
+        }
     }
 
-    private void OnTargetStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
+    private void OnTargetStatusChanged(ObserverBehaviour behaviour, TargetStatus targetStatus)
     {
-        if (!hasBeenShown && (status.Status == Status.TRACKED || status.Status == Status.EXTENDED_TRACKED))
+        if (!hasBeenShown && (targetStatus.Status == Status.TRACKED || targetStatus.Status == Status.EXTENDED_TRACKED))
         {
-            chairAnchor.SetActive(true);
-            hasBeenShown = true;
+            Debug.Log(" QR Code Detected – Showing Cube");
+            if (chairAnchor != null)
+                chairAnchor.SetActive(true);
+
+            hasBeenShown = true; // only once
         }
     }
 }
