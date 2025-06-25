@@ -7,7 +7,7 @@ public class StepAnimationController : MonoBehaviour
     public Button nextButton;
 
     private int currentStep = 1;
-    private int totalSteps = 3;
+    private int totalSteps = 5;
 
     void Start()
     {
