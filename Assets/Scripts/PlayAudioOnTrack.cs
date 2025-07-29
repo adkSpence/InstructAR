@@ -1,39 +1,76 @@
+using System.Collections;
 using UnityEngine;
 using Vuforia;
 
-[RequireComponent(typeof(ObserverBehaviour), typeof(AudioSource))]
 public class PlayAudioOnTrack : MonoBehaviour
 {
-    AudioSource _audio;
-    ObserverBehaviour _observer;
+    public GameObject highlightPrefab;  // Assign in Inspector
 
-    void Awake()
-    {
-        // Grab references
-        _audio = GetComponent<AudioSource>();
-        _observer = GetComponent<ObserverBehaviour>();
-    }
+    private AudioSource audioSource;
+    private ObserverBehaviour observerBehaviour;
+    private bool hasPlayed = false;
 
-    void OnEnable()
+    void Start()
     {
-        // Register to Vuforia’s status‐changed event
-        _observer.OnTargetStatusChanged += OnStatusChanged;
-    }
+        observerBehaviour = GetComponent<ObserverBehaviour>();
+        audioSource = GetComponent<AudioSource>();
 
-    void OnDisable()
-    {
-        _observer.OnTargetStatusChanged -= OnStatusChanged;
-    }
-
-    void OnStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
-    {
-        if ((status.Status == Status.TRACKED || status.Status == Status.EXTENDED_TRACKED) && !_audio.isPlaying)
+        if (observerBehaviour)
         {
-            _audio.Play();
+            observerBehaviour.OnTargetStatusChanged += OnStatusChanged;
         }
-        else if (status.Status == Status.NO_POSE && _audio.isPlaying)
+    }
+
+    private void OnDestroy()
+    {
+        if (observerBehaviour)
         {
-            _audio.Stop();
+            observerBehaviour.OnTargetStatusChanged -= OnStatusChanged;
+        }
+    }
+
+    private void OnStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
+    {
+        if (!hasPlayed && status.Status == Status.TRACKED)
+        {
+            if (audioSource && !audioSource.isPlaying)
+            {
+                audioSource.Play();
+                Debug.Log("🔊 Audio started playing");
+            }
+
+            SpawnHighlightAtAnchor();
+            hasPlayed = true;
+        }
+    }
+
+    private void SpawnHighlightAtAnchor()
+    {
+        string anchorName = observerBehaviour.TargetName switch
+        {
+            "lega" => "LegA_anchor",
+            "legb" => "LegB_anchor",
+            "legc" => "LegC_anchor",
+            "legd" => "LegD_anchor",
+            _ => "LegA_anchor"
+        };
+
+        GameObject anchor = GameObject.Find(anchorName);
+
+        if (anchor != null)
+        {
+            Vector3 position = anchor.transform.position;
+            Quaternion rotation = anchor.transform.rotation;
+
+            GameObject highlight = Instantiate(highlightPrefab, position, rotation);
+            highlight.transform.localScale = new Vector3(0.05f, 0.03f, 0.05f); // Adjust scale here if needed
+
+            Debug.Log($"✨ Highlight marker instantiated at anchor: {anchorName}");
+            Debug.Log($"Anchor '{anchorName}' position: {position}, world pos: {highlight.transform.position}");
+        }
+        else
+        {
+            Debug.LogWarning($"❌ Anchor '{anchorName}' not found in the scene.");
         }
     }
 }

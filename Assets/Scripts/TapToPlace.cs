@@ -1,39 +1,20 @@
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
-using System.Collections.Generic;
+using Vuforia;
 
 public class TapToPlace : MonoBehaviour
 {
-    public GameObject objectToPlace;
-    private ARRaycastManager raycastManager;
-    private List<ARRaycastHit> hits = new List<ARRaycastHit>();
-    private bool hasPlaced = false;
+    public GameObject planeFinder;
 
     void Start()
     {
-        raycastManager = FindObjectOfType<ARRaycastManager>();
+        var cpb = planeFinder.GetComponent<ContentPositioningBehaviour>();
+        cpb.OnContentPlaced.AddListener(obj => OnPlaced(cpb.AnchorStage, obj));
     }
 
-    void Update()
+    void OnPlaced(AnchorBehaviour anchor, GameObject placedObject)
     {
-        if (hasPlaced) return;
-
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-        {
-            Vector2 touchPosition = Input.GetTouch(0).position;
-
-            if (raycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
-            {
-                Debug.Log(" ✅ Plane Hit!");
-                Pose hitPose = hits[0].pose;
-                Instantiate(objectToPlace, hitPose.position, hitPose.rotation);
-                hasPlaced = true;
-            }
-            else
-            {
-                Debug.Log(" ❌ No Plane Hit");
-            }
-        }
+        // Example: Disable plane finder after placement
+        planeFinder.SetActive(false);
     }
+>>>>>>> 7c6fd0d (Working assembly)
 }
