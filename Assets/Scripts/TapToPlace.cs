@@ -16,5 +16,4 @@ public class TapToPlace : MonoBehaviour
         // Example: Disable plane finder after placement
         planeFinder.SetActive(false);
     }
->>>>>>> 7c6fd0d (Working assembly)
 }
