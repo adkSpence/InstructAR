@@ -11,12 +11,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/VishantScene.unity
     guid: 8f73955007e4f384396b141e9f99db6c
-  - enabled: 0
-    path: Assets/Scenes/AnimationTestQRScene.unity
-    guid: ac17f4a4fb0df463e913e0c69cf41854
   - enabled: 1
     path: Assets/Scenes/FinalUI.unity
     guid: c3b1c4fb0b84b8e429d27ddd95b924b4
+  - enabled: 0
+    path: Assets/Scenes/AnimationTestQRScene.unity
+    guid: ac17f4a4fb0df463e913e0c69cf41854
   - enabled: 1
     path: Assets/Scenes/Instruct.unity
     guid: 537b1786390794036855e2904dfc19b0

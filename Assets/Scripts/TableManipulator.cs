@@ -18,6 +18,9 @@ public class TableManipulator : MonoBehaviour
 
     void Update()
     {
+
+        if (mainCamera == null) return;
+
         int touchCount = Input.touchCount;
 
         if (touchCount == 2)
